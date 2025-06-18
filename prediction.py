@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import pickle
+import xgboost as xgb
 import os
 #model = pickle.load(open("xgboost_model.pkl", "rb"))
 # Get absolute path of current directory (pages/)
