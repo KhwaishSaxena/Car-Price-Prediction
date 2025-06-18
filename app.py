@@ -1,7 +1,13 @@
 import streamlit as st
+def main():
+    pg = st.navigation([
+        st.Page('info.py', title="Home", icon=':material/home:'),
+        st.Page('prediction.py', title="Predict", icon=':material/stethoscope:'),
+    ])
+    pg.run()
 
-st.set_page_config(page_title="Car Price Prediction", page_icon=":car:", layout="wide")
-
+if __name__ == "__main__":
+    main()
 st.title("Welcome to Car Price Prediction App")
 st.markdown("""
 This app helps you **predict the price of a used car** based on various features like make, Engine , year, mileage, and more.
