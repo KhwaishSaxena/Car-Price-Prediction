@@ -4,13 +4,13 @@ import numpy as np
 import pickle
 import xgboost as xgb
 import os
-#model = pickle.load(open("xgboost_model.pkl", "rb"))
+model = pickle.load(open("xgboost_model.pkl", "rb"))
 # Get absolute path of current directory (pages/)
-current_dir = os.path.dirname(__file__)
-model_path = os.path.join(current_dir, "xgboost_model.pkl")
+#current_dir = os.path.dirname(__file__)
+#model_path = os.path.join(current_dir, "xgboost_model.pkl")
 
-with open(model_path, "rb") as f:
-    model = pickle.load(f)
+#with open(model_path, "rb") as f:
+ #   model = pickle.load(f)
 st.title('Car Price Prediction')
 
 make = st.selectbox("Make", ['Honda', 'Maruti Suzuki', 'Hyundai', 'Toyota', 'Mercedes-Benz', 'BMW', 'Skoda', 'Nissan', 'Renault', 'Tata', 'Volkswagen', 'Ford', 'Audi', 'Mahindra', 'MG', 'Jeep', 'Porsche', 'Kia', 'Land Rover', 'Volvo', 'Maserati', 'Jaguar', 'Isuzu', 'Fiat', 'MINI', 'Ferrari', 'Mitsubishi', 'Datsun', 'Lamborghini', 'Chevrolet', 'Ssangyong', 'Rolls-Royce', 'Lexus'], help = "Company Of the car")
