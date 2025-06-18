@@ -4,7 +4,11 @@ import numpy as np
 import pickle
 
 #model = pickle.load(open("xgboost_model.pkl", "rb"))
-with open("xgboost_model.pkl", "rb") as f:
+# Get absolute path of current directory (pages/)
+current_dir = os.path.dirname(__file__)
+model_path = os.path.join(current_dir, "xgboost_model.pkl")
+
+with open(model_path, "rb") as f:
     model = pickle.load(f)
 st.title('Car Price Prediction')
 
