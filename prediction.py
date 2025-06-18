@@ -3,8 +3,9 @@ import pandas as pd
 import numpy as np
 import pickle
 
-model = pickle.load(open("xgboost_model.pkl", "rb"))
-
+#model = pickle.load(open("xgboost_model.pkl", "rb"))
+with open("xgboost_model.pkl", "rb") as f:
+    model = pickle.load(f)
 st.title('Car Price Prediction')
 
 make = st.selectbox("Make", ['Honda', 'Maruti Suzuki', 'Hyundai', 'Toyota', 'Mercedes-Benz', 'BMW', 'Skoda', 'Nissan', 'Renault', 'Tata', 'Volkswagen', 'Ford', 'Audi', 'Mahindra', 'MG', 'Jeep', 'Porsche', 'Kia', 'Land Rover', 'Volvo', 'Maserati', 'Jaguar', 'Isuzu', 'Fiat', 'MINI', 'Ferrari', 'Mitsubishi', 'Datsun', 'Lamborghini', 'Chevrolet', 'Ssangyong', 'Rolls-Royce', 'Lexus'], help = "Company Of the car")
