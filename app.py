@@ -1,8 +1,8 @@
 import streamlit as st
 def main():
     pg = st.navigation([
-        st.Page('info.py', title="Home", icon=':material/home:'),
-        st.Page('prediction.py', title="Predict", icon=':material/stethoscope:'),
+        st.Page('info.py', title="Home"),
+        st.Page('prediction.py', title="Predict"),
     ])
     pg.run()
 
