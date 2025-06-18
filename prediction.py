@@ -2,8 +2,14 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import pickle
+import os
 
-model = pickle.load(open("xgboost_model.pkl", "rb"))
+model_path = os.path.join(os.path.dirname(__file__), "..", "xgboost_model.pkl")
+model_path = os.path.abspath(model_path)
+
+with open(model_path, "rb") as f:
+    model = pickle.load(f)
+#model = pickle.load(open("xgboost_model.pkl", "rb"))
 
 st.title('Car Price Prediction')
 
