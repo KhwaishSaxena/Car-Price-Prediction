@@ -72,4 +72,4 @@ streamlit run app.py
 ```
 ## Live Demo
 
-[Diabetes Prediction App](https://car-price-prediction-using-ml.streamlit.app/)
+[Car Price Estimator App](https://car-price-prediction-using-ml.streamlit.app/)
