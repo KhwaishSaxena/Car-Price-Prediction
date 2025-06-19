@@ -21,10 +21,10 @@ sc = st.slider("Seating Capacity", min_value=4, max_value=7)
 fc = st.number_input("Full Tank Capacity (Litres)", min_value=0, format="%d")
 
 with st.expander("Engine Specifications"):
-    power_bhp = st.slider("Power (BHP)", 20, 1000, 120)
-    power_rpm = st.slider("Power RPM", 1000, 8000, 4000)
-    torque_nm = st.slider("Torque (Nm)", 30, 1000, 200)
-    torque_rpm = st.slider("Torque RPM", 1000, 8000, 4000)
+    power_bhp = st.slider("Power (BHP)", 20, 1000)
+    power_rpm = st.slider("Power RPM", 1000, 8000)
+    torque_nm = st.slider("Torque (Nm)", 30, 1000)
+    torque_rpm = st.slider("Torque RPM", 1000, 8000)
 
 with st.expander("Car Dimensions"):
     length = st.number_input("Length (mm)", min_value=0, format="%d")
