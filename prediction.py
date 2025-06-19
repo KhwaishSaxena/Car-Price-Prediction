@@ -39,3 +39,15 @@ with st.expander("Car Dimensions"):
     length = st.number_input("Length", min_value = 0, format = "%d", help = "length of the car in mm")
     width = st.number_input("Width", min_value = 0, format = "%d", help = "width of the car in mm")
     height = st.number_input("Height", min_value = 0, format = "%d", help = "height of the car in mm")
+
+if st.button("Predict"):
+    input_array = np.array([[make, fuel_type, owner, drivetrain, transmission, seller_type,Loc, color, year, km, fc, sc, engine, power_bhp, power_rpm, torque_nm, torque_rpm, length, width, height]])
+
+    def predict(input_array):
+        price = model.predict(input_array)
+        st.success(f"Estimated Car Price: ₹ {price:,.2f}")
+
+    predict(input_array)
+
+if __name__ == '__page__':
+    predict()
