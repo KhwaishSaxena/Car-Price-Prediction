@@ -6,13 +6,13 @@ model = pickle.load(open("xgboost_model.pkl", "rb"))
 st.title("Car Price Prediction")
 
 make = st.selectbox("Make", ['Honda', 'Maruti Suzuki', 'Hyundai', 'Toyota', 'Mercedes-Benz', 'BMW', 'Skoda', 'Nissan', 'Renault', 'Tata', 'Volkswagen', 'Ford', 'Audi', 'Mahindra', 'MG', 'Jeep', 'Porsche', 'Kia', 'Land Rover', 'Volvo', 'Maserati', 'Jaguar', 'Isuzu', 'Fiat', 'MINI', 'Ferrari', 'Mitsubishi', 'Datsun', 'Lamborghini', 'Chevrolet', 'Ssangyong', 'Rolls-Royce', 'Lexus'])
-fuel_type = st.selectbox("Fuel Type", ["Petrol", "Diesel", "CNG", "Others", "Electric"])
+fuel_type = st.selectbox("Fuel Type", ["Petrol", "Diesel", "CNG", "Other", "Electric"])
 owner = st.selectbox("Owner", ['First', 'Second', '3 or More', 'UnRegistered Car'])
 drivetrain = st.selectbox("Drivetrain", ['FWD', 'RWD', 'AWD'])
 transmission = st.selectbox("Transmission", ['Manual', 'Automatic'])
 seller_type = st.selectbox("Seller Type", ['Individual', 'Corporate', 'Commercial Registration'])
-color = st.selectbox("Color", ['White', 'Silver', 'Blue', 'Black', 'Grey', 'Red', 'Others'])
-Loc = st.selectbox("Location", ['Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Chandigarh', 'Lucknow', 'Kolkata', 'Ahmedabad', 'Patna', 'Chennai', 'Jaipur', 'Others'])
+color = st.selectbox("Color", ['White', 'Silver', 'Others', 'Grey', 'Blue', 'Black', 'Red'])
+Loc = st.selectbox("Location", ['Mumbai', 'Delhi', 'Bangalore', 'Chandigarh', 'Lucknow', 'Hyderabad', 'Kolkata', 'Ahmedabad', 'Patna', 'Other', 'Chennai', 'Jaipur'])
 
 year = st.number_input("Year", min_value=1990, format="%d")
 km = st.number_input("Kilometers Driven", min_value=0, format="%d")
@@ -32,13 +32,13 @@ with st.expander("Car Dimensions"):
     height = st.number_input("Height (mm)", min_value=0, format="%d")
 
 make_mapping = {k: i for i, k in enumerate(['Honda', 'Maruti Suzuki', 'Hyundai', 'Toyota', 'Mercedes-Benz', 'BMW', 'Skoda', 'Nissan', 'Renault', 'Tata', 'Volkswagen', 'Ford', 'Audi', 'Mahindra', 'MG', 'Jeep', 'Porsche', 'Kia', 'Land Rover', 'Volvo', 'Maserati', 'Jaguar', 'Isuzu', 'Fiat', 'MINI', 'Ferrari', 'Mitsubishi', 'Datsun', 'Lamborghini', 'Chevrolet', 'Ssangyong', 'Rolls-Royce', 'Lexus'])}
-fuel_mapping = {k: i for i, k in enumerate(["Petrol", "Diesel", "CNG", "Others", "Electric"])}
+fuel_mapping = {k: i for i, k in enumerate(["Petrol", "Diesel", "CNG", "Other", "Electric"])}
 owner_mapping = {k: i for i, k in enumerate(['First', 'Second', '3 or More', 'UnRegistered Car'])}
 drive_mapping = {k: i for i, k in enumerate(['FWD', 'RWD', 'AWD'])}
 trans_mapping = {k: i for i, k in enumerate(['Manual', 'Automatic'])}
 seller_mapping = {k: i for i, k in enumerate(['Individual', 'Corporate', 'Commercial Registration'])}
-color_mapping = {k: i for i, k in enumerate(['White', 'Silver', 'Blue', 'Black', 'Grey', 'Red', 'Others'])}
-location_mapping = {k: i for i, k in enumerate(['Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Chandigarh', 'Lucknow', 'Kolkata', 'Ahmedabad', 'Patna', 'Chennai', 'Jaipur', 'Others'])}
+color_mapping = {k: i for i, k in enumerate(['White', 'Silver', 'Others', 'Grey', 'Blue', 'Black', 'Red'])}
+location_mapping = {k: i for i, k in enumerate(['Mumbai', 'Delhi', 'Bangalore', 'Chandigarh', 'Lucknow', 'Hyderabad', 'Kolkata', 'Ahmedabad', 'Patna', 'Other', 'Chennai', 'Jaipur'])}
 
 make = make_mapping[make]
 fuel_type = fuel_mapping[fuel_type]
