@@ -2,13 +2,9 @@ import streamlit as st
 import numpy as np
 import pickle
 
-# Load the trained XGBoost model
-with open("pages/xgboost_model.pkl", "rb") as f:
-    model = pickle.load(f)
-
+model = pickle.load(open("xgboost_model.pkl", "rb"))
 st.title("Car Price Prediction")
 
-# 1. Collect user inputs
 make = st.selectbox("Make", ['Honda', 'Maruti Suzuki', 'Hyundai', 'Toyota', 'Mercedes-Benz', 'BMW', 'Skoda', 'Nissan', 'Renault', 'Tata', 'Volkswagen', 'Ford', 'Audi', 'Mahindra', 'MG', 'Jeep', 'Porsche', 'Kia', 'Land Rover', 'Volvo', 'Maserati', 'Jaguar', 'Isuzu', 'Fiat', 'MINI', 'Ferrari', 'Mitsubishi', 'Datsun', 'Lamborghini', 'Chevrolet', 'Ssangyong', 'Rolls-Royce', 'Lexus'])
 fuel_type = st.selectbox("Fuel Type", ["Petrol", "Diesel", "CNG", "Others", "Electric"])
 owner = st.selectbox("Owner", ['First', 'Second', '3 or More', 'UnRegistered Car'])
@@ -35,7 +31,6 @@ with st.expander("Car Dimensions"):
     width = st.number_input("Width (mm)", min_value=0, format="%d")
     height = st.number_input("Height (mm)", min_value=0, format="%d")
 
-# 2. Manual Label Encodings (match training time)
 make_mapping = {k: i for i, k in enumerate(['Honda', 'Maruti Suzuki', 'Hyundai', 'Toyota', 'Mercedes-Benz', 'BMW', 'Skoda', 'Nissan', 'Renault', 'Tata', 'Volkswagen', 'Ford', 'Audi', 'Mahindra', 'MG', 'Jeep', 'Porsche', 'Kia', 'Land Rover', 'Volvo', 'Maserati', 'Jaguar', 'Isuzu', 'Fiat', 'MINI', 'Ferrari', 'Mitsubishi', 'Datsun', 'Lamborghini', 'Chevrolet', 'Ssangyong', 'Rolls-Royce', 'Lexus'])}
 fuel_mapping = {k: i for i, k in enumerate(["Petrol", "Diesel", "CNG", "Others", "Electric"])}
 owner_mapping = {k: i for i, k in enumerate(['First', 'Second', '3 or More', 'UnRegistered Car'])}
@@ -45,7 +40,6 @@ seller_mapping = {k: i for i, k in enumerate(['Individual', 'Corporate', 'Commer
 color_mapping = {k: i for i, k in enumerate(['White', 'Silver', 'Blue', 'Black', 'Grey', 'Red', 'Others'])}
 location_mapping = {k: i for i, k in enumerate(['Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Chandigarh', 'Lucknow', 'Kolkata', 'Ahmedabad', 'Patna', 'Chennai', 'Jaipur', 'Others'])}
 
-# Apply the encodings
 make = make_mapping[make]
 fuel_type = fuel_mapping[fuel_type]
 owner = owner_mapping[owner]
@@ -55,11 +49,8 @@ seller_type = seller_mapping[seller_type]
 color = color_mapping[color]
 Loc = location_mapping[Loc]
 
-# 3. Prediction logic
 if st.button("Predict Price"):
-    input_array = np.array([[make, fuel_type, owner, drivetrain, transmission, seller_type,
-                             Loc, color, year, km, fc, sc, engine, power_bhp,
-                             power_rpm, torque_nm, torque_rpm, length, width, height]])
+    input_array = np.array([[make, fuel_type, owner, drivetrain, transmission, seller_type,Loc, color, year, km, fc, sc, engine, power_bhp,power_rpm, torque_nm, torque_rpm, length, width, height]])
 
     try:
         price = model.predict(input_array)[0]
