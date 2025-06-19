@@ -62,7 +62,7 @@ The model was trained using **XGBoost Regressor**, with preprocessing including:
 ```bash
 # Step 1: Clone the repo
 git clone https://github.com/KhwaishSaxena/Car-Price-Prediction
-cd credit-card-fraud-detection
+cd car-price-prediction
 
 # Step 2: Install Requirements
 pip install -r requirements.txt
