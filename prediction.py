@@ -70,12 +70,6 @@ if st.button("Predict Price"):
     try:
         price_lakh = model.predict(input_scaled)[0]
         price_rupees = price_lakh * 100000
-        if price_rupees >= 10000000:
-            display_price = f"{price_rupees / 10000000:.2f} Cr"
-        elif price_rupees >= 100000:
-            display_price = f"{price_rupees / 100000:.2f} L"
-        else:
-            display_price = f"{price_rupees / 1000:.2f} K"
         st.success(f"Estimated Car Price: ₹ {display_price}")
     except Exception as e:
         st.error("Prediction failed. Please check model or input compatibility.")
