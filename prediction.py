@@ -68,8 +68,14 @@ except Exception as e:
 # Predict
 if st.button("Predict Price"):
     try:
-        pred_price = model.predict(input_scaled)[0]
-        st.success(f"Estimated Car Price: ₹ {pred_price:,.0f}")
+        pred_price_lakh = model.predict(input_scaled)[0]
+        pred_price_rupees = pred_price_lakh * 100000
+        if pred_price_rupees >= 1e7:
+            st.success(f"Estimated Car Price: ₹ {pred_price_rupees / 1e7:.2f} Cr")
+        elif pred_price_rupees >= 1e5:
+            st.success(f"Estimated Car Price: ₹ {pred_price_rupees / 1e5:.2f} L")
+        else:
+            st.success(f"Estimated Car Price: ₹ {pred_price_rupees:,.0f}")
     except Exception as e:
         st.error("Prediction failed. Please check model or input compatibility.")
         st.exception(e)
