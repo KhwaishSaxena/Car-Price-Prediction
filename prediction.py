@@ -2,17 +2,22 @@ import streamlit as st
 import numpy as np
 import pickle
 
+# Load model, scaler, encoder
 model = pickle.load(open("xgboost_model.pkl", "rb"))
+scaler = pickle.load(open("scaler.pkl", "rb"))
+encoder = pickle.load(open("encoder.pkl", "rb"))
+
 st.title("Car Price Prediction")
 
-make = st.selectbox("Make", ['Honda', 'Maruti Suzuki', 'Hyundai', 'Toyota', 'Mercedes-Benz', 'BMW', 'Skoda', 'Nissan', 'Renault', 'Tata', 'Volkswagen', 'Ford', 'Audi', 'Mahindra', 'MG', 'Jeep', 'Porsche', 'Kia', 'Land Rover', 'Volvo', 'Maserati', 'Jaguar', 'Isuzu', 'Fiat', 'MINI', 'Ferrari', 'Mitsubishi', 'Datsun', 'Lamborghini', 'Chevrolet', 'Ssangyong', 'Rolls-Royce', 'Lexus'])
-fuel_type = st.selectbox("Fuel Type", ["Petrol", "Diesel", "CNG", "Other", "Electric"])
-owner = st.selectbox("Owner", ['First', 'Second', '3 or More', 'UnRegistered Car'])
-drivetrain = st.selectbox("Drivetrain", ['FWD', 'RWD', 'AWD'])
-transmission = st.selectbox("Transmission", ['Manual', 'Automatic'])
-seller_type = st.selectbox("Seller Type", ['Individual', 'Corporate', 'Commercial Registration'])
-color = st.selectbox("Color", ['White', 'Silver', 'Others', 'Grey', 'Blue', 'Black', 'Red'])
-Loc = st.selectbox("Location", ['Mumbai', 'Delhi', 'Bangalore', 'Chandigarh', 'Lucknow', 'Hyderabad', 'Kolkata', 'Ahmedabad', 'Patna', 'Other', 'Chennai', 'Jaipur'])
+# Input features
+make = st.selectbox("Make", encoder['make'].classes_)
+fuel_type = st.selectbox("Fuel Type", encoder['fuel_type'].classes_)
+owner = st.selectbox("Owner", encoder['owner'].classes_)
+drivetrain = st.selectbox("Drivetrain", encoder['drivetrain'].classes_)
+transmission = st.selectbox("Transmission", encoder['transmission'].classes_)
+seller_type = st.selectbox("Seller Type", encoder['seller_type'].classes_)
+color = st.selectbox("Color", encoder['color'].classes_)
+Loc = st.selectbox("Location", encoder['location'].classes_)
 
 year = st.number_input("Year", min_value=1990, format="%d")
 km = st.number_input("Kilometers Driven", min_value=0, format="%d")
@@ -31,30 +36,37 @@ with st.expander("Car Dimensions"):
     width = st.number_input("Width (mm)", min_value=0, format="%d")
     height = st.number_input("Height (mm)", min_value=0, format="%d")
 
-make_mapping = {k: i for i, k in enumerate(['Honda', 'Maruti Suzuki', 'Hyundai', 'Toyota', 'Mercedes-Benz', 'BMW', 'Skoda', 'Nissan', 'Renault', 'Tata', 'Volkswagen', 'Ford', 'Audi', 'Mahindra', 'MG', 'Jeep', 'Porsche', 'Kia', 'Land Rover', 'Volvo', 'Maserati', 'Jaguar', 'Isuzu', 'Fiat', 'MINI', 'Ferrari', 'Mitsubishi', 'Datsun', 'Lamborghini', 'Chevrolet', 'Ssangyong', 'Rolls-Royce', 'Lexus'])}
-fuel_mapping = {k: i for i, k in enumerate(["Petrol", "Diesel", "CNG", "Other", "Electric"])}
-owner_mapping = {k: i for i, k in enumerate(['First', 'Second', '3 or More', 'UnRegistered Car'])}
-drive_mapping = {k: i for i, k in enumerate(['FWD', 'RWD', 'AWD'])}
-trans_mapping = {k: i for i, k in enumerate(['Manual', 'Automatic'])}
-seller_mapping = {k: i for i, k in enumerate(['Individual', 'Corporate', 'Commercial Registration'])}
-color_mapping = {k: i for i, k in enumerate(['White', 'Silver', 'Others', 'Grey', 'Blue', 'Black', 'Red'])}
-location_mapping = {k: i for i, k in enumerate(['Mumbai', 'Delhi', 'Bangalore', 'Chandigarh', 'Lucknow', 'Hyderabad', 'Kolkata', 'Ahmedabad', 'Patna', 'Other', 'Chennai', 'Jaipur'])}
+# Encode categorical values using your loaded encoder
+try:
+    make_enc = encoder['make'].transform([make])[0]
+    fuel_enc = encoder['fuel_type'].transform([fuel_type])[0]
+    owner_enc = encoder['owner'].transform([owner])[0]
+    drive_enc = encoder['drivetrain'].transform([drivetrain])[0]
+    trans_enc = encoder['transmission'].transform([transmission])[0]
+    seller_enc = encoder['seller_type'].transform([seller_type])[0]
+    color_enc = encoder['color'].transform([color])[0]
+    loc_enc = encoder['location'].transform([Loc])[0]
+except Exception as e:
+    st.error("Encoding failed. Please check encoder files.")
+    st.exception(e)
 
-make = make_mapping[make]
-fuel_type = fuel_mapping[fuel_type]
-owner = owner_mapping[owner]
-drivetrain = drive_mapping[drivetrain]
-transmission = trans_mapping[transmission]
-seller_type = seller_mapping[seller_type]
-color = color_mapping[color]
-Loc = location_mapping[Loc]
+# Final input array
+input_array = np.array([[make_enc, fuel_enc, owner_enc, drive_enc, trans_enc, seller_enc, loc_enc, color_enc,
+                         year, km, fc, sc, engine, power_bhp, power_rpm, torque_nm, torque_rpm,
+                         length, width, height]])
 
+# Scale numeric features (adjust depending on what you scaled during training!)
+try:
+    input_scaled = scaler.transform(input_array)
+except Exception as e:
+    st.error("Scaling failed. Please check scaler and input.")
+    st.exception(e)
+
+# Prediction
 if st.button("Predict Price"):
-    input_array = np.array([[make, fuel_type, owner, drivetrain, transmission, seller_type,Loc, color, year, km, fc, sc, engine, power_bhp,power_rpm, torque_nm, torque_rpm, length, width, height]])
-
     try:
-        price = model.predict(input_array)[0]
-        st.success(f"Estimated Car Price :{price: .2f}")
+        price = model.predict(input_scaled)[0]
+        st.success(f"Estimated Car Price: {price:,.2f} L")
     except Exception as e:
-        st.error("Prediction failed. Please check input values or model compatibility.")
+        st.error("Prediction failed. Please check model or input compatibility.")
         st.exception(e)
