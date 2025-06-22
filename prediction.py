@@ -65,12 +65,23 @@ except Exception as e:
     st.exception(e)
     st.stop()
 
+def format_price(price):
+    if price >= 1e7:  # 1 crore = 10,000,000
+        return f"{price / 1e7:.2f} Cr"
+    elif price >= 1e5:  # 1 lakh = 100,000
+        return f"{price / 1e5:.2f} L"
+    elif price >= 1e3:  # 1 thousand = 1,000
+        return f"{price / 1e3:.2f} K"
+    else:
+        return f"{price:.0f}"
+
 # Predict
 if st.button("Predict Price"):
     try:
         price = model.predict(input_scaled)[0]
-        price_lakhs = price / 100000
-        st.success(f"Estimated Car Price: ₹ {price_lakhs:.2f} L")
+        formatted_price = format_price(price)
+        st.success(f"Estimated Car Price: ₹ {formatted_price}")
     except Exception as e:
         st.error("Prediction failed. Please check model or input compatibility.")
         st.exception(e)
+
