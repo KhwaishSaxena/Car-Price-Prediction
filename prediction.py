@@ -9,7 +9,7 @@ encoder = pickle.load(open("encoder.pkl", "rb"))
 
 st.title("Car Price Prediction")
 
-# Input features
+# Input features using encoder classes for dropdowns
 make = st.selectbox("Make", encoder['make'].classes_)
 fuel_type = st.selectbox("Fuel Type", encoder['fuel_type'].classes_)
 owner = st.selectbox("Owner", encoder['owner'].classes_)
@@ -19,7 +19,7 @@ seller_type = st.selectbox("Seller Type", encoder['seller_type'].classes_)
 color = st.selectbox("Color", encoder['color'].classes_)
 Loc = st.selectbox("Location", encoder['location'].classes_)
 
-year = st.number_input("Year", min_value=1990, format="%d")
+year = st.number_input("Year", min_value=1990, max_value=2050, format="%d")
 km = st.number_input("Kilometers Driven", min_value=0, format="%d")
 engine = st.number_input("Engine (in CC)", min_value=0, format="%d")
 sc = st.slider("Seating Capacity", min_value=4, max_value=7)
@@ -36,7 +36,7 @@ with st.expander("Car Dimensions"):
     width = st.number_input("Width (mm)", min_value=0, format="%d")
     height = st.number_input("Height (mm)", min_value=0, format="%d")
 
-# Encode categorical values using your loaded encoder
+# Encode categorical features
 try:
     make_enc = encoder['make'].transform([make])[0]
     fuel_enc = encoder['fuel_type'].transform([fuel_type])[0]
@@ -47,26 +47,28 @@ try:
     color_enc = encoder['color'].transform([color])[0]
     loc_enc = encoder['location'].transform([Loc])[0]
 except Exception as e:
-    st.error("Encoding failed. Please check encoder files.")
+    st.error("Encoding failed. Please check your encoder.pkl file.")
     st.exception(e)
+    st.stop()
 
 # Final input array
 input_array = np.array([[make_enc, fuel_enc, owner_enc, drive_enc, trans_enc, seller_enc, loc_enc, color_enc,
                          year, km, fc, sc, engine, power_bhp, power_rpm, torque_nm, torque_rpm,
                          length, width, height]])
 
-# Scale numeric features (adjust depending on what you scaled during training!)
+# Scale features
 try:
     input_scaled = scaler.transform(input_array)
 except Exception as e:
-    st.error("Scaling failed. Please check scaler and input.")
+    st.error("Scaling failed. Please check your scaler.pkl file.")
     st.exception(e)
+    st.stop()
 
-# Prediction
+# Predict
 if st.button("Predict Price"):
     try:
         price = model.predict(input_scaled)[0]
-        st.success(f"Estimated Car Price: {price:,.2f} L")
+        st.success(f"Estimated Car Price: ₹ {price:,.2f} L")
     except Exception as e:
         st.error("Prediction failed. Please check model or input compatibility.")
         st.exception(e)
