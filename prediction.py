@@ -69,8 +69,7 @@ except Exception as e:
 if st.button("Predict Price"):
     try:
         pred_price = model.predict(input_scaled)[0]
-        actual_price = pred_price * 100000.0 
-        st.success(f"Estimated Car Price: ₹ {actual_price:,.0f}")
+        st.success(f"Estimated Car Price: ₹ {pred_price:,.0f}")
     except Exception as e:
         st.error("Prediction failed. Please check model or input compatibility.")
         st.exception(e)
