@@ -4,7 +4,7 @@ import pickle
 
 # Load model, scaler, encoder
 model = pickle.load(open("xgboost_model.pkl", "rb"))
-scaler = pickle.load(open("scaler.pkl", "rb"))
+
 
 color_encoder = pickle.load(open("color_encoder.pkl", "rb"))
 drivetrain_encoder = pickle.load(open("drivetrain_encoder.pkl", "rb"))
