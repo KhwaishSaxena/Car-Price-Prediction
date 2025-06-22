@@ -5,7 +5,10 @@ import pickle
 # Load model, scaler, encoder
 model = pickle.load(open("xgboost_model.pkl", "rb"))
 scaler = pickle.load(open("scaler.pkl", "rb"))
+
 encoder = pickle.load(open("encoder.pkl", "rb"))
+st.write(encoder)
+st.write(encoder['make'].classes_)
 
 st.title("Car Price Prediction")
 
