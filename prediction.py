@@ -2,15 +2,14 @@ import streamlit as st
 import numpy as np
 import pickle
 
-# Load model, scaler, encoder
+# Load trained model, scaler, and encoder
 model = pickle.load(open("xgboost_model.pkl", "rb"))
 scaler = pickle.load(open("scaler.pkl", "rb"))
-
 encoder = pickle.load(open("encoder.pkl", "rb"))
 
 st.title("Car Price Prediction")
 
-# Input features using encoder classes for dropdowns
+# User inputs
 make = st.selectbox("Make", encoder['make'].classes_)
 fuel_type = st.selectbox("Fuel Type", encoder['fuel_type'].classes_)
 owner = st.selectbox("Owner", encoder['owner'].classes_)
@@ -18,9 +17,9 @@ drivetrain = st.selectbox("Drivetrain", encoder['drivetrain'].classes_)
 transmission = st.selectbox("Transmission", encoder['transmission'].classes_)
 seller_type = st.selectbox("Seller Type", encoder['seller_type'].classes_)
 color = st.selectbox("Color", encoder['color'].classes_)
-Loc = st.selectbox("Location", encoder['location'].classes_)
+location = st.selectbox("Location", encoder['location'].classes_)
 
-year = st.number_input("Year", min_value=1990, max_value=2050, format="%d")
+year = st.number_input("Year", min_value=1990, format="%d")
 km = st.number_input("Kilometers Driven", min_value=0, format="%d")
 engine = st.number_input("Engine (in CC)", min_value=0, format="%d")
 sc = st.slider("Seating Capacity", min_value=4, max_value=7)
@@ -37,41 +36,33 @@ with st.expander("Car Dimensions"):
     width = st.number_input("Width (mm)", min_value=0, format="%d")
     height = st.number_input("Height (mm)", min_value=0, format="%d")
 
-# Encode categorical features
-try:
-    make_enc = encoder['make'].transform([make])[0]
-    fuel_enc = encoder['fuel_type'].transform([fuel_type])[0]
-    owner_enc = encoder['owner'].transform([owner])[0]
-    drive_enc = encoder['drivetrain'].transform([drivetrain])[0]
-    trans_enc = encoder['transmission'].transform([transmission])[0]
-    seller_enc = encoder['seller_type'].transform([seller_type])[0]
-    color_enc = encoder['color'].transform([color])[0]
-    loc_enc = encoder['location'].transform([Loc])[0]
-except Exception as e:
-    st.error("Encoding failed. Please check your encoder.pkl file.")
-    st.exception(e)
-    st.stop()
+# Encode categorical inputs
+make_enc = encoder['make'].transform([make])[0]
+fuel_enc = encoder['fuel_type'].transform([fuel_type])[0]
+owner_enc = encoder['owner'].transform([owner])[0]
+drivetrain_enc = encoder['drivetrain'].transform([drivetrain])[0]
+transmission_enc = encoder['transmission'].transform([transmission])[0]
+seller_enc = encoder['seller_type'].transform([seller_type])[0]
+color_enc = encoder['color'].transform([color])[0]
+location_enc = encoder['location'].transform([location])[0]
 
-# Final input array
-input_array = np.array([[make_enc, fuel_enc, owner_enc, drive_enc, trans_enc, seller_enc, loc_enc, color_enc,
-                         year, km, fc, sc, engine, power_bhp, power_rpm, torque_nm, torque_rpm,
+# Combine inputs
+input_array = np.array([[make_enc, fuel_enc, owner_enc, drivetrain_enc, transmission_enc, seller_enc,
+                         location_enc, color_enc, year, km, fc, sc, engine,
+                         power_bhp, power_rpm, torque_nm, torque_rpm,
                          length, width, height]])
 
-# Scale features
-try:
-    input_scaled = scaler.transform(input_array)
-except Exception as e:
-    st.error("Scaling failed. Please check your scaler.pkl file.")
-    st.exception(e)
-    st.stop()
+# Scale numerical features
+input_scaled = scaler.transform(input_array)
 
 # Predict
 if st.button("Predict Price"):
-    try:
-        price_lakh = model.predict(input_scaled)[0]
-        price_rupees = price_lakh * 1000
-        st.success(f"Estimated Car Price: ₹ {price_rupees}")
-    except Exception as e:
-        st.error("Prediction failed. Please check model or input compatibility.")
-        st.exception(e)
+    price_lakh = model.predict(input_scaled)[0]
+    price_rupees = price_lakh * 100000
 
+    if price_rupees >= 1e7:
+        st.success(f"Estimated Car Price: ₹ {price_rupees/1e7:.2f} Cr")
+    elif price_rupees >= 1e5:
+        st.success(f"Estimated Car Price: ₹ {price_rupees/1e5:.2f} L")
+    else:
+        st.success(f"Estimated Car Price: ₹ {price_rupees:,.0f}")
