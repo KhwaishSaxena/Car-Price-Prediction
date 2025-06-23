@@ -11,14 +11,12 @@ The aim of this project is to build an intelligent system that can predict the *
 
 The model was trained using **XGBoost Regressor**, with preprocessing including:
 - Label encoding of categorical features
-- Feature scaling using `StandardScaler`
 
 
 ## Features
 
 - Predict car resale price in lakhs 
 - Label encoding of categorical columns
-- Feature scaling for numerical stability
 - Advanced feature engineering for power, torque, etc.
 - Optuna used for hyperparameter optimization
 - Web deployment using **Streamlit**
@@ -53,7 +51,7 @@ The model was trained using **XGBoost Regressor**, with preprocessing including:
 - **Scikit-learn**
 - **XGBoost**, **Optuna**
 - **Streamlit** for web UI
-- **Label Encoding**, **StandardScaler**
+- **Label Encoding**
 - **Pickle** for model serialization
 
 
